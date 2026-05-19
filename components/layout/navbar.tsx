@@ -39,13 +39,13 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090909]/82 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090909]/78 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <span className="grid h-8 w-8 place-items-center border border-cyan-400/40 bg-cyan-400/10 text-sm font-black text-cyan-200 shadow-[0_0_22px_rgba(0,229,255,0.12)] transition hover:scale-105">
+          <span className="grid h-8 w-8 place-items-center rounded border border-cyan-400/40 bg-cyan-400/10 text-sm font-black text-cyan-200 shadow-[0_0_22px_rgba(0,229,255,0.12)] transition hover:scale-105 hover:border-cyan-300/70">
             EX
           </span>
-          <span className="text-lg font-semibold tracking-wide">ElenX</span>
+          <span className="text-lg font-semibold tracking-wide text-white">ElenX</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -53,7 +53,7 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded px-3 py-2 text-sm text-zinc-400 transition hover:bg-white/[0.04] hover:text-white"
+              className="rounded px-3 py-2 text-sm text-zinc-400 transition hover:bg-white/[0.05] hover:text-white"
             >
               {item.label}
             </Link>
@@ -64,13 +64,13 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="rounded px-3 py-2 text-sm text-zinc-400 transition hover:bg-white/[0.04] hover:text-white"
+            className="rounded px-3 py-2 text-sm text-zinc-400 transition hover:bg-white/[0.05] hover:text-white"
           >
             History
           </button>
 
           {open ? (
-            <div className="animate-pop absolute right-0 top-12 w-72 rounded-lg border border-white/10 bg-[#101010] p-2 shadow-2xl shadow-black/50">
+            <div className="animate-pop absolute right-0 top-12 w-72 rounded-lg border border-white/10 bg-[#101010]/95 p-2 shadow-2xl shadow-black/50 backdrop-blur-xl">
               {history.length ? (
                 <div className="space-y-1">
                   {history.map((item) => (
@@ -78,7 +78,7 @@ export default function Navbar() {
                       key={`${item.target}-${item.scannedAt}`}
                       href={`/scanner?target=${encodeURIComponent(item.target)}`}
                       onClick={() => setOpen(false)}
-                      className="block rounded px-3 py-2 transition hover:bg-white/[0.06]"
+                      className="block rounded px-3 py-2 transition hover:bg-white/[0.07]"
                     >
                       <div className="flex items-center justify-between gap-3">
                         <span className="mono truncate text-xs text-zinc-300">{item.target}</span>
@@ -96,7 +96,7 @@ export default function Navbar() {
 
           <Link
             href="/scanner"
-            className="rounded border border-cyan-400/35 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-100 transition hover:-translate-y-0.5 hover:border-cyan-300/70 hover:bg-cyan-400/15"
+            className="rounded border border-cyan-400/35 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-100 shadow-[0_0_24px_rgba(0,229,255,0.08)] transition hover:-translate-y-0.5 hover:border-cyan-300/70 hover:bg-cyan-400/15"
           >
             Scan
           </Link>

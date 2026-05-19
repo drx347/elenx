@@ -39,12 +39,14 @@ body::before {
   z-index: -2;
   content: "";
   background:
-    linear-gradient(rgba(0, 229, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.025) 1px, transparent 1px),
-    radial-gradient(circle at 18% 0%, rgba(0, 191, 255, 0.13), transparent 34rem),
-    radial-gradient(circle at 82% 8%, rgba(0, 255, 157, 0.08), transparent 26rem),
+    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.026) 1px, transparent 1px),
+    radial-gradient(circle at 16% -6%, rgba(0, 191, 255, 0.16), transparent 30rem),
+    radial-gradient(circle at 86% 12%, rgba(0, 255, 157, 0.1), transparent 24rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.025), transparent 28%),
     #090909;
-  background-size: 44px 44px, 44px 44px, auto, auto, auto;
+  background-size: 44px 44px, 44px 44px, auto, auto, auto, auto;
+  animation: grid-drift 18s linear infinite;
 }
 
 body::after {
@@ -53,7 +55,10 @@ body::after {
   z-index: -1;
   pointer-events: none;
   content: "";
-  background: linear-gradient(180deg, rgba(9, 9, 9, 0.12), rgba(9, 9, 9, 0.88));
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.016) 0, rgba(255, 255, 255, 0.016) 1px, transparent 1px, transparent 4px),
+    linear-gradient(180deg, rgba(9, 9, 9, 0.1), rgba(9, 9, 9, 0.9));
+  opacity: 0.75;
 }
 
 a {
@@ -77,14 +82,16 @@ input {
 
 .shell-panel {
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(22, 22, 22, 0.94), rgba(12, 12, 12, 0.96));
-  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.03), 0 20px 70px rgba(0, 0, 0, 0.38);
-  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 40%),
+    linear-gradient(180deg, rgba(22, 22, 22, 0.94), rgba(12, 12, 12, 0.96));
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.03), 0 20px 70px rgba(0, 0, 0, 0.38), inset 0 1px rgba(255, 255, 255, 0.04);
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .shell-panel:hover {
   border-color: rgba(0, 229, 255, 0.18);
-  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.05), 0 24px 78px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.06), 0 24px 78px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .animate-fade-up {
@@ -95,9 +102,45 @@ input {
   animation: pop 160ms ease both;
 }
 
+.animate-soft-pulse {
+  animation: pulse-soft 2.8s ease-in-out infinite;
+}
+
 .scan-line {
   background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
   animation: scan-line 3.2s ease-in-out infinite;
+}
+
+.scan-surface {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-surface::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.08), transparent),
+    repeating-linear-gradient(90deg, transparent 0, transparent 20px, rgba(0, 229, 255, 0.035) 21px);
+  opacity: 0;
+  transform: translateX(-40%);
+  transition: opacity 180ms ease;
+}
+
+.scan-surface:hover::before {
+  opacity: 1;
+  animation: surface-sweep 1.6s ease;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 18px currentColor;
 }
 
 @keyframes scan-line {
@@ -106,6 +149,24 @@ input {
   }
   100% {
     transform: translateX(100%);
+  }
+}
+
+@keyframes surface-sweep {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(60%);
+  }
+}
+
+@keyframes grid-drift {
+  from {
+    background-position: 0 0, 0 0, center, center, center, center;
+  }
+  to {
+    background-position: 44px 44px, 44px 44px, center, center, center, center;
   }
 }
 

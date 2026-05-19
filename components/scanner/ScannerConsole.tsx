@@ -105,11 +105,17 @@ export default function ScannerConsole() {
   return (
     <section className="animate-fade-up mx-auto max-w-3xl">
       <div className="mb-8 animate-fade-up">
-        <p className="mono text-xs uppercase tracking-[0.22em] text-cyan-200">scanner</p>
-        <h1 className="mt-3 text-4xl font-semibold text-white">Scan target</h1>
+        <p className="mono inline-flex items-center gap-2 rounded border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs uppercase tracking-[0.22em] text-cyan-200">
+          <span className="status-dot animate-soft-pulse" />
+          scanner
+        </p>
+        <h1 className="mt-4 text-4xl font-semibold text-white">Scan target</h1>
+        <p className="mt-3 text-sm leading-6 text-zinc-500">
+          Masukkan domain atau URL, lalu baca status akhirnya tanpa perlu bongkar detail teknis satu per satu.
+        </p>
       </div>
 
-      <div className="shell-panel relative overflow-hidden rounded-lg p-5">
+      <div className="scan-surface shell-panel relative rounded-lg p-5">
         {loading ? <div className="scan-line absolute left-0 top-0 h-px w-full" /> : null}
         <div className="flex flex-col gap-3 sm:flex-row">
           <Input
@@ -122,11 +128,16 @@ export default function ScannerConsole() {
             {loading ? "Scanning..." : "Scan"}
           </Button>
         </div>
+        <div className="mt-4 grid gap-2 text-xs text-zinc-500 sm:grid-cols-3">
+          <p className="rounded border border-white/10 bg-black/20 px-3 py-2">DNS + records</p>
+          <p className="rounded border border-white/10 bg-black/20 px-3 py-2">SSL + headers</p>
+          <p className="rounded border border-white/10 bg-black/20 px-3 py-2">Ports + reputation</p>
+        </div>
         {error ? <p className="mt-4 text-sm text-red-300">{error}</p> : null}
       </div>
 
       {result && verdict ? (
-        <div className="animate-fade-up mt-5 shell-panel rounded-lg p-5">
+        <div className="scan-surface animate-fade-up mt-5 shell-panel rounded-lg p-5">
           <div className="flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-zinc-500">Score</p>
@@ -144,7 +155,7 @@ export default function ScannerConsole() {
           <div className="mt-4 space-y-3">
             {result.findings.length ? (
               result.findings.map((finding) => (
-                <div key={finding.id} className="rounded border border-white/10 bg-white/[0.03] p-3 transition hover:-translate-y-0.5 hover:border-cyan-300/20">
+                <div key={finding.id} className="rounded border border-white/10 bg-white/[0.03] p-3 transition hover:-translate-y-0.5 hover:border-cyan-300/20 hover:bg-white/[0.045]">
                   <div className="flex items-center justify-between gap-3">
                     <p className="font-medium text-white">{finding.title}</p>
                     <span className="mono text-xs uppercase text-zinc-500">{finding.severity}</span>
