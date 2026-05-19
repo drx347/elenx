@@ -140,9 +140,9 @@ export default function ScannerConsole() {
           </Button>
         </div>
         <div className="mt-4 grid gap-2 text-xs text-zinc-500 sm:grid-cols-3">
-          <p className="rounded border border-white/10 bg-black/20 px-3 py-2">DNS + records</p>
-          <p className="rounded border border-white/10 bg-black/20 px-3 py-2">SSL + headers</p>
-          <p className="rounded border border-white/10 bg-black/20 px-3 py-2">Ports + reputation</p>
+          <p className="motion-chip rounded border border-white/10 bg-black/20 px-3 py-2">DNS + records</p>
+          <p className="motion-chip stagger-1 rounded border border-white/10 bg-black/20 px-3 py-2">SSL + headers</p>
+          <p className="motion-chip stagger-2 rounded border border-white/10 bg-black/20 px-3 py-2">Ports + reputation</p>
         </div>
         {error ? <p className="mt-4 text-sm text-red-300">{error}</p> : null}
       </div>
@@ -155,27 +155,27 @@ export default function ScannerConsole() {
               <p className="mt-1 text-3xl font-semibold text-cyan-100">{result.score}/100</p>
               <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
                 <div
-                  className={`h-full rounded-full shadow-[0_0_18px_currentColor] transition-all duration-700 ${verdict.barClassName}`}
+                  className={`h-full animate-slide-in rounded-full shadow-[0_0_18px_currentColor] transition-all duration-700 ${verdict.barClassName}`}
                   style={{ width: `${result.score}%` }}
                 />
               </div>
               <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
-                <div className="rounded border border-white/10 bg-black/20 px-3 py-2">
+                <div className="motion-card animate-rise-in rounded border border-white/10 bg-black/20 px-3 py-2">
                   <p className="mono text-zinc-500">passed</p>
                   <p className="mt-1 text-lg font-semibold text-emerald-100">{passedChecks}</p>
                 </div>
-                <div className="rounded border border-white/10 bg-black/20 px-3 py-2">
+                <div className="motion-card animate-rise-in stagger-1 rounded border border-white/10 bg-black/20 px-3 py-2">
                   <p className="mono text-zinc-500">warning</p>
                   <p className="mt-1 text-lg font-semibold text-amber-100">{warningChecks}</p>
                 </div>
-                <div className="rounded border border-white/10 bg-black/20 px-3 py-2">
+                <div className="motion-card animate-rise-in stagger-2 rounded border border-white/10 bg-black/20 px-3 py-2">
                   <p className="mono text-zinc-500">failed</p>
                   <p className="mt-1 text-lg font-semibold text-red-100">{failedChecks}</p>
                 </div>
               </div>
             </div>
             <div className="flex flex-col gap-3 sm:items-end">
-              <div className={`relative w-full overflow-hidden rounded border px-4 py-3 sm:w-72 ${verdict.className}`}>
+              <div className={`animate-slide-in relative w-full overflow-hidden rounded border px-4 py-3 sm:w-72 ${verdict.className}`}>
                 <p className="mono flex items-center gap-2 text-xs uppercase tracking-[0.18em]">
                   <span className="status-dot animate-soft-pulse" />
                   {verdict.label}
@@ -187,19 +187,19 @@ export default function ScannerConsole() {
           </div>
 
           <div className="mt-4 grid gap-2 text-xs sm:grid-cols-4">
-            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+            <div className="motion-card animate-rise-in rounded border border-white/10 bg-white/[0.025] px-3 py-2">
               <p className="mono text-zinc-500">findings</p>
               <p className="mt-1 text-base font-semibold text-white">{result.findings.length}</p>
             </div>
-            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+            <div className="motion-card animate-rise-in stagger-1 rounded border border-white/10 bg-white/[0.025] px-3 py-2">
               <p className="mono text-zinc-500">critical</p>
               <p className="mt-1 text-base font-semibold text-red-100">{getSeverityCount(result, "critical")}</p>
             </div>
-            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+            <div className="motion-card animate-rise-in stagger-2 rounded border border-white/10 bg-white/[0.025] px-3 py-2">
               <p className="mono text-zinc-500">high</p>
               <p className="mt-1 text-base font-semibold text-red-100">{getSeverityCount(result, "high")}</p>
             </div>
-            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+            <div className="motion-card animate-rise-in stagger-3 rounded border border-white/10 bg-white/[0.025] px-3 py-2">
               <p className="mono text-zinc-500">medium</p>
               <p className="mt-1 text-base font-semibold text-amber-100">{getSeverityCount(result, "medium")}</p>
             </div>
@@ -208,7 +208,7 @@ export default function ScannerConsole() {
           <div className="mt-4 space-y-3">
             {result.findings.length ? (
               result.findings.map((finding) => (
-                <div key={finding.id} className="rounded border border-white/10 bg-white/[0.03] p-3 transition hover:-translate-y-0.5 hover:border-cyan-300/20 hover:bg-white/[0.045]">
+                <div key={finding.id} className="motion-card animate-rise-in rounded border border-white/10 bg-white/[0.03] p-3 hover:border-cyan-300/20 hover:bg-white/[0.045]">
                   <div className="flex items-center justify-between gap-3">
                     <p className="font-medium text-white">{finding.title}</p>
                     <span className="mono text-xs uppercase text-zinc-500">{finding.severity}</span>

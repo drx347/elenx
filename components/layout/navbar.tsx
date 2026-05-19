@@ -39,7 +39,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090909]/78 backdrop-blur-xl">
+    <header className="animate-fade-down sticky top-0 z-50 border-b border-white/10 bg-[#090909]/78 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
           <span className="grid h-8 w-8 place-items-center rounded border border-cyan-400/40 bg-cyan-400/10 text-sm font-black text-cyan-200 shadow-[0_0_22px_rgba(0,229,255,0.12)] transition hover:scale-105 hover:border-cyan-300/70">
@@ -78,7 +78,7 @@ export default function Navbar() {
                       key={`${item.target}-${item.scannedAt}`}
                       href={`/scanner?target=${encodeURIComponent(item.target)}`}
                       onClick={() => setOpen(false)}
-                      className="block rounded px-3 py-2 transition hover:bg-white/[0.07]"
+                      className="motion-card block rounded px-3 py-2 transition hover:bg-white/[0.07]"
                     >
                       <div className="flex items-center justify-between gap-3">
                         <span className="mono truncate text-xs text-zinc-300">{item.target}</span>

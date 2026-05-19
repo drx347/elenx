@@ -22,13 +22,13 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/scanner"
-                className="inline-flex items-center justify-center rounded border border-cyan-300/50 bg-cyan-400/15 px-5 py-3 text-sm font-semibold text-cyan-50 shadow-[0_0_30px_rgba(0,229,255,0.09)] transition hover:-translate-y-0.5 hover:bg-cyan-400/20"
+                className="motion-chip inline-flex items-center justify-center rounded border border-cyan-300/50 bg-cyan-400/15 px-5 py-3 text-sm font-semibold text-cyan-50 shadow-[0_0_30px_rgba(0,229,255,0.09)] transition hover:bg-cyan-400/20"
               >
                 Mulai scan
               </Link>
               <Link
                 href="/scanner?target=https%3A%2F%2Fexample.com"
-                className="inline-flex items-center justify-center rounded border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-zinc-200 transition hover:-translate-y-0.5 hover:bg-white/[0.07]"
+                className="motion-chip stagger-1 inline-flex items-center justify-center rounded border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-zinc-200 transition hover:bg-white/[0.07]"
               >
                 Coba contoh
               </Link>
@@ -46,7 +46,7 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {["DNS", "SSL", "HTTP"].map((item, index) => (
-                  <div key={item} className="rounded border border-white/10 bg-white/[0.035] p-3">
+                  <div key={item} className={`motion-card animate-rise-in rounded border border-white/10 bg-white/[0.035] p-3 stagger-${index + 1}`}>
                     <p className="mono text-xs text-zinc-500">{item}</p>
                     <div className="mt-3 h-1.5 overflow-hidden rounded bg-white/10">
                       <div
@@ -59,7 +59,7 @@ export default function Home() {
               </div>
               <div className="mt-4 space-y-2">
                 {["Security headers detected", "TLS endpoint active", "No critical signal found"].map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded border border-white/10 bg-black/20 px-3 py-2 text-sm text-zinc-300">
+                  <div key={item} className="motion-card animate-slide-in flex items-center gap-3 rounded border border-white/10 bg-black/20 px-3 py-2 text-sm text-zinc-300">
                     <span className="status-dot text-emerald-200" />
                     {item}
                   </div>
