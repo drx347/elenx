@@ -116,22 +116,44 @@ input {
   overflow: hidden;
 }
 
+.scan-surface > * {
+  position: relative;
+  z-index: 1;
+}
+
 .scan-surface::before {
   position: absolute;
   inset: 0;
+  z-index: 0;
   content: "";
   pointer-events: none;
   background:
     linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.08), transparent),
     repeating-linear-gradient(90deg, transparent 0, transparent 20px, rgba(0, 229, 255, 0.035) 21px);
-  opacity: 0;
+  opacity: 0.36;
   transform: translateX(-40%);
-  transition: opacity 180ms ease;
+  animation: surface-sweep 5.8s ease-in-out infinite;
 }
 
 .scan-surface:hover::before {
-  opacity: 1;
-  animation: surface-sweep 1.6s ease;
+  opacity: 0.72;
+}
+
+.ambient-glow::after {
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, transparent, rgba(0, 229, 255, 0.46), transparent 34%, rgba(0, 255, 157, 0.2), transparent 68%, rgba(0, 229, 255, 0.34), transparent);
+  filter: blur(18px);
+  opacity: 0.24;
+  animation: glow-orbit 7s linear infinite;
+}
+
+.ambient-glow:hover::after {
+  opacity: 0.38;
 }
 
 .status-dot {
@@ -153,11 +175,20 @@ input {
 }
 
 @keyframes surface-sweep {
-  from {
+  0% {
     transform: translateX(-60%);
   }
-  to {
+  50% {
     transform: translateX(60%);
+  }
+  100% {
+    transform: translateX(-60%);
+  }
+}
+
+@keyframes glow-orbit {
+  to {
+    transform: rotate(360deg);
   }
 }
 

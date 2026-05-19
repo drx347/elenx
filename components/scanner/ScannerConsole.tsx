@@ -15,6 +15,7 @@ type ScanVerdict = {
   label: "Safe" | "Suspicious" | "Danger";
   description: string;
   className: string;
+  barClassName: string;
 };
 
 function getScanVerdict(result: ElenxScanResult): ScanVerdict {
@@ -25,6 +26,7 @@ function getScanVerdict(result: ElenxScanResult): ScanVerdict {
       label: "Danger",
       description: "Risiko tinggi ditemukan. Periksa temuan utama sebelum melanjutkan.",
       className: "border-red-400/30 bg-red-500/10 text-red-200",
+      barClassName: "bg-red-300",
     };
   }
 
@@ -33,6 +35,7 @@ function getScanVerdict(result: ElenxScanResult): ScanVerdict {
       label: "Suspicious",
       description: "Ada beberapa sinyal yang perlu diperiksa lebih lanjut.",
       className: "border-amber-300/30 bg-amber-400/10 text-amber-100",
+      barClassName: "bg-amber-200",
     };
   }
 
@@ -40,7 +43,12 @@ function getScanVerdict(result: ElenxScanResult): ScanVerdict {
     label: "Safe",
     description: "Tidak ada temuan penting dari pemeriksaan dasar.",
     className: "border-emerald-300/30 bg-emerald-400/10 text-emerald-100",
+    barClassName: "bg-emerald-200",
   };
+}
+
+function getSeverityCount(result: ElenxScanResult, severity: "low" | "medium" | "high" | "critical") {
+  return result.findings.filter((finding) => finding.severity === severity).length;
 }
 
 function saveHistory(entry: HistoryEntry) {
@@ -101,6 +109,9 @@ export default function ScannerConsole() {
   }
 
   const verdict = result ? getScanVerdict(result) : null;
+  const failedChecks = result ? Object.values(result.checks).filter((check) => check === "failed").length : 0;
+  const warningChecks = result ? Object.values(result.checks).filter((check) => check === "warning").length : 0;
+  const passedChecks = result ? Object.values(result.checks).filter((check) => check === "passed").length : 0;
 
   return (
     <section className="animate-fade-up mx-auto max-w-3xl">
@@ -137,18 +148,60 @@ export default function ScannerConsole() {
       </div>
 
       {result && verdict ? (
-        <div className="scan-surface animate-fade-up mt-5 shell-panel rounded-lg p-5">
+        <div className="ambient-glow scan-surface animate-fade-up mt-5 shell-panel rounded-lg p-5">
           <div className="flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="text-sm text-zinc-500">Score</p>
               <p className="mt-1 text-3xl font-semibold text-cyan-100">{result.score}/100</p>
+              <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className={`h-full rounded-full shadow-[0_0_18px_currentColor] transition-all duration-700 ${verdict.barClassName}`}
+                  style={{ width: `${result.score}%` }}
+                />
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
+                <div className="rounded border border-white/10 bg-black/20 px-3 py-2">
+                  <p className="mono text-zinc-500">passed</p>
+                  <p className="mt-1 text-lg font-semibold text-emerald-100">{passedChecks}</p>
+                </div>
+                <div className="rounded border border-white/10 bg-black/20 px-3 py-2">
+                  <p className="mono text-zinc-500">warning</p>
+                  <p className="mt-1 text-lg font-semibold text-amber-100">{warningChecks}</p>
+                </div>
+                <div className="rounded border border-white/10 bg-black/20 px-3 py-2">
+                  <p className="mono text-zinc-500">failed</p>
+                  <p className="mt-1 text-lg font-semibold text-red-100">{failedChecks}</p>
+                </div>
+              </div>
             </div>
             <div className="flex flex-col gap-3 sm:items-end">
-              <div className={`w-full rounded border px-4 py-3 sm:w-72 ${verdict.className}`}>
-                <p className="mono text-xs uppercase tracking-[0.18em]">{verdict.label}</p>
+              <div className={`relative w-full overflow-hidden rounded border px-4 py-3 sm:w-72 ${verdict.className}`}>
+                <p className="mono flex items-center gap-2 text-xs uppercase tracking-[0.18em]">
+                  <span className="status-dot animate-soft-pulse" />
+                  {verdict.label}
+                </p>
                 <p className="mt-2 text-sm leading-5">{verdict.description}</p>
               </div>
               <p className="mono max-w-full truncate text-sm text-zinc-400 sm:max-w-72">{result.hostname}</p>
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-2 text-xs sm:grid-cols-4">
+            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+              <p className="mono text-zinc-500">findings</p>
+              <p className="mt-1 text-base font-semibold text-white">{result.findings.length}</p>
+            </div>
+            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+              <p className="mono text-zinc-500">critical</p>
+              <p className="mt-1 text-base font-semibold text-red-100">{getSeverityCount(result, "critical")}</p>
+            </div>
+            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+              <p className="mono text-zinc-500">high</p>
+              <p className="mt-1 text-base font-semibold text-red-100">{getSeverityCount(result, "high")}</p>
+            </div>
+            <div className="rounded border border-white/10 bg-white/[0.025] px-3 py-2">
+              <p className="mono text-zinc-500">medium</p>
+              <p className="mt-1 text-base font-semibold text-amber-100">{getSeverityCount(result, "medium")}</p>
             </div>
           </div>
 
