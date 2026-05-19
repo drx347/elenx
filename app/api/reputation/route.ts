@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { lookupAbuseIPDB } from "@/services/abuseIPDB";
-import { lookupGoogleSafeBrowsing } from "@/services/googleSafeBrowsing";
 import { lookupVirusTotal } from "@/services/virusTotal";
 
 export const runtime = "nodejs";
@@ -13,11 +11,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "target query is required." }, { status: 400 });
   }
 
-  const [virusTotal, googleSafeBrowsing, abuseIPDB] = await Promise.all([
-    lookupVirusTotal(target),
-    lookupGoogleSafeBrowsing(target),
-    lookupAbuseIPDB(target),
-  ]);
+  const virusTotal = await lookupVirusTotal(target);
 
-  return NextResponse.json({ target, providers: { virusTotal, googleSafeBrowsing, abuseIPDB } });
+  return NextResponse.json({ target, providers: { virusTotal } });
 }

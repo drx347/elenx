@@ -16,12 +16,11 @@ keys you want to enable:
 
 ```bash
 VIRUSTOTAL_API_KEY=
-GOOGLE_SAFE_BROWSING_API_KEY=
-ABUSEIPDB_API_KEY=
 ```
 
-The scanner still runs without these keys, but external reputation checks are
-reported as not configured.
+The scanner still runs without this key, but external reputation checks are
+reported as not configured. Google Safe Browsing and AbuseIPDB are optional and
+are not required for deployment.
 
 ## Deploy to Vercel
 
@@ -32,5 +31,5 @@ Use the default Vercel settings for a Next.js app:
 - Install command: `npm install`
 - Output directory: leave empty
 
-Add the environment variables above in the Vercel project settings before
-deploying.
+Add `VIRUSTOTAL_API_KEY` in the Vercel project settings before deploying if you
+want VirusTotal reputation checks enabled.

@@ -249,9 +249,9 @@ function buildChecks(scan: Omit<ElenxScanResult, "checks">, configuredProviders:
     headers: Object.values(scan.http.securityHeaders).every(Boolean) ? "passed" : "warning",
     redirects: scan.http.redirects.length <= 3 ? "passed" : "warning",
     ports: scan.ports.some((item) => item.open && ![80, 443].includes(item.port)) ? "warning" : "passed",
-    reputation: configuredProviders.virusTotal === "not_configured" && configuredProviders.abuseIPDB === "not_configured" ? "not_configured" : "passed",
+    reputation: configuredProviders.virusTotal === "not_configured" ? "not_configured" : "passed",
     malware: configuredProviders.virusTotal === "not_configured" ? "not_configured" : "passed",
-    phishing: configuredProviders.googleSafeBrowsing === "not_configured" ? "not_configured" : "passed",
+    phishing: "not_configured",
     blacklist: configuredProviders.virusTotal === "not_configured" ? "not_configured" : "passed",
   } satisfies Record<string, CheckState>;
 }
@@ -267,8 +267,6 @@ export async function scanTarget(target: string): Promise<ElenxScanResult> {
 
   const providers = {
     virusTotal: process.env.VIRUSTOTAL_API_KEY ? "passed" : "not_configured",
-    googleSafeBrowsing: process.env.GOOGLE_SAFE_BROWSING_API_KEY ? "passed" : "not_configured",
-    abuseIPDB: process.env.ABUSEIPDB_API_KEY ? "passed" : "not_configured",
   } satisfies Record<string, CheckState>;
 
   const baseScan = {
