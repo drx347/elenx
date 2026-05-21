@@ -16,6 +16,7 @@ export type ElenxScanResult = {
   target: string;
   normalizedUrl: string;
   hostname: string;
+  logoUrl: string;
   status: "completed";
   score: number;
   checks: Record<string, CheckState>;
@@ -37,6 +38,7 @@ export type ElenxScanResult = {
     status?: number;
     finalUrl?: string;
     redirects: string[];
+    logoUrl?: string;
     securityHeaders: Record<string, string | null>;
   };
   ports: Array<{ port: number; open: boolean }>;
@@ -64,6 +66,47 @@ function normalizeTarget(target: string) {
     normalizedUrl: url.toString(),
     hostname: url.hostname,
   };
+}
+
+function decodeHtmlAttribute(value: string) {
+  return value
+    .replaceAll("&amp;", "&")
+    .replaceAll("&quot;", "\"")
+    .replaceAll("&#39;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">");
+}
+
+function getAttribute(tag: string, attribute: string) {
+  const match = tag.match(new RegExp(`${attribute}\\s*=\\s*["']([^"']+)["']`, "i"));
+  return match ? decodeHtmlAttribute(match[1]) : null;
+}
+
+function findPageLogoUrl(html: string, pageUrl: string) {
+  const linkTags = html.match(/<link\b[^>]*>/gi) ?? [];
+  const preferredRelTokens = [
+    ["apple-touch-icon"],
+    ["icon"],
+    ["mask-icon"],
+  ];
+
+  for (const tokens of preferredRelTokens) {
+    const tag = linkTags.find((item) => {
+      const relTokens = getAttribute(item, "rel")?.toLowerCase().split(/\s+/) ?? [];
+      return tokens.every((token) => relTokens.includes(token));
+    });
+    const href = tag ? getAttribute(tag, "href") : null;
+
+    if (href) {
+      return new URL(href, pageUrl).toString();
+    }
+  }
+
+  return null;
+}
+
+function buildLogoUrl(pageUrl: string) {
+  return new URL("/favicon.ico", pageUrl).toString();
 }
 
 async function resolveRecords(hostname: string) {
@@ -138,11 +181,14 @@ async function inspectHttp(normalizedUrl: string): Promise<ElenxScanResult["http
   const securityHeaders = Object.fromEntries(
     SECURITY_HEADERS.map((header) => [header, response?.headers.get(header) ?? null]),
   );
+  const contentType = response?.headers.get("content-type") ?? "";
+  const html = contentType.includes("text/html") ? await response?.text().catch(() => "") : "";
 
   return {
     status: response?.status,
     finalUrl: currentUrl,
     redirects,
+    logoUrl: html ? findPageLogoUrl(html, currentUrl) ?? buildLogoUrl(currentUrl) : buildLogoUrl(currentUrl),
     securityHeaders,
   };
 }
@@ -273,6 +319,7 @@ export async function scanTarget(target: string): Promise<ElenxScanResult> {
     target,
     normalizedUrl,
     hostname,
+    logoUrl: http.logoUrl ?? buildLogoUrl(http.finalUrl ?? normalizedUrl),
     status: "completed" as const,
     dns: dnsRecords,
     ssl,

@@ -71,6 +71,7 @@ export default function ScannerConsole() {
   const [result, setResult] = useState<ElenxScanResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [logoFailed, setLogoFailed] = useState(false);
 
   useEffect(() => {
     const queryTarget = new URLSearchParams(window.location.search).get("target");
@@ -78,6 +79,10 @@ export default function ScannerConsole() {
       setTarget(queryTarget);
     }
   }, []);
+
+  useEffect(() => {
+    setLogoFailed(false);
+  }, [result?.hostname]);
 
   async function runScan() {
     setLoading(true);
@@ -151,8 +156,26 @@ export default function ScannerConsole() {
         <div className="ambient-glow scan-surface animate-fade-up mt-5 shell-panel rounded-lg p-5">
           <div className="flex flex-col gap-4 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-zinc-500">Score</p>
-              <p className="mt-1 text-3xl font-semibold text-cyan-100">{result.score}/100</p>
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded border border-white/10 bg-white/[0.04]">
+                  {logoFailed ? (
+                    <span className="text-lg font-semibold uppercase text-cyan-100">
+                      {result.hostname.slice(0, 1)}
+                    </span>
+                  ) : (
+                    <img
+                      src={result.logoUrl}
+                      alt={`${result.hostname} logo`}
+                      className="h-10 w-10 object-contain"
+                      onError={() => setLogoFailed(true)}
+                    />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm text-zinc-500">{result.hostname}</p>
+                  <p className="mt-1 text-3xl font-semibold text-cyan-100">{result.score}/100</p>
+                </div>
+              </div>
               <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
                 <div
                   className={`h-full animate-slide-in rounded-full shadow-[0_0_18px_currentColor] transition-all duration-700 ${verdict.barClassName}`}
@@ -182,7 +205,7 @@ export default function ScannerConsole() {
                 </p>
                 <p className="mt-2 text-sm leading-5">{verdict.description}</p>
               </div>
-              <p className="mono max-w-full truncate text-sm text-zinc-400 sm:max-w-72">{result.hostname}</p>
+              <p className="mono max-w-full truncate text-sm text-zinc-400 sm:max-w-72">{result.normalizedUrl}</p>
             </div>
           </div>
 
